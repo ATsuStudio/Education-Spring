@@ -26,6 +26,8 @@
                         <small th:text="${post[0].author} + ' - ' + ${post[0].created}" class="text-body-secondary"/>
                         <p th:text="${post[0].content}" class="card-text"/>
                         <a th:href="'/news/' + ${post[0].id}+ '/edit'" class="btn btn-primary my-2">Edit</a>
+                        <a th:href="'/news/' + ${post[0].id}+ '/delete'" class="btn btn-warning my-2">Delete</a>
+
 
                     </div>
 

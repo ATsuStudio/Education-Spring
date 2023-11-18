@@ -2,6 +2,7 @@ package com.atsustudio.education.Controllers;
 
 import com.atsustudio.education.Interfaces.IPostRepository;
 import com.atsustudio.education.Models.Post;
+import jakarta.servlet.annotation.HttpConstraint;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,6 @@ public class PublicationController {
     public String news(Model model) {
         Iterable<Post> posts = postRepository.findAll();
         model.addAttribute("posts", posts);
-        Post post = postRepository.findById(2L).orElseThrow();
-        System.out.println("asdasdasdsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         return "news";
     }
     @GetMapping("/news/add")
@@ -97,4 +96,29 @@ public class PublicationController {
         return "redirect:" + baseUrl + "/news/"+nid;
     }
 
+
+    @GetMapping("/news/{id}/delete")
+    public String getDeleteNews(@PathVariable(value = "id") long nid, HttpServletRequest request, Model model){
+        if(!postRepository.findById(nid).isPresent()){
+            String baseUrl = String.format("%s://%s:%d",request.getScheme(),  request.getServerName(), request.getServerPort());
+            return "redirect:" + baseUrl + "/news";
+        }
+
+        Optional<Post> post =  postRepository.findById(nid);
+        ArrayList<Post> postArr = new ArrayList<>();
+        post.ifPresent(postArr::add);
+        model.addAttribute("post", postArr);
+
+        return "news_delete";
+    }
+
+
+    @PostMapping("/news/{id}/delete")
+    public String postDeleteNews(@PathVariable(value = "id") long nid, HttpServletRequest request, Model model){
+        Post post = postRepository.findById(nid).orElseThrow();
+        postRepository.delete(post);
+
+        String baseUrl = String.format("%s://%s:%d",request.getScheme(),  request.getServerName(), request.getServerPort());
+        return "redirect:" + baseUrl + "/news";
+    }
 }

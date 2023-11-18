@@ -25,7 +25,6 @@ public class PublicationController {
         Iterable<Post> posts = postRepository.findAll();
         model.addAttribute("posts", posts);
         Post post = postRepository.findById(2L).orElseThrow();
-        System.out.println("asdasda");
         return "news";
     }
     @GetMapping("/news/add")
